@@ -10,7 +10,8 @@ class IOFileSystem implements c.FileSystem {
   IOFileSystem(String key) : _fileDir = createDirectory(key);
 
   static Future<Directory> createDirectory(String key) async {
-    var baseDir = await getTemporaryDirectory();
+    // use documents directory instead of temp
+    var baseDir = await getApplicationDocumentsDirectory(); 
     var path = p.join(baseDir.path, key);
 
     var fs = const LocalFileSystem();
