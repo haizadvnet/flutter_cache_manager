@@ -6,14 +6,15 @@ import 'firebase_http_file_service.dart';
 /// Use [FirebaseCacheManager] if you want to download files from firebase storage
 /// and store them in your local cache.
 class FirebaseCacheManager extends CacheManager with ImageCacheManager {
-  static const key = 'firebaseCache';
+  late final String key;
 
-  static late final FirebaseCacheManager _instance = FirebaseCacheManager._();
+  static late final FirebaseCacheManager _instance;// = FirebaseCacheManager._();
 
-  factory FirebaseCacheManager() {
+  factory FirebaseCacheManager(String key) {
+    _instance = FirebaseCacheManager._(key);
     return _instance;
   }
 
-  FirebaseCacheManager._()
+  FirebaseCacheManager._(this.key)
       : super(Config(key,fileSystem: IOFileSystem(key),fileService: FirebaseHttpFileService()));
 }
