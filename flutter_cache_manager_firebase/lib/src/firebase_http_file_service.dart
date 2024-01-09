@@ -16,6 +16,9 @@ class FirebaseHttpFileService extends HttpFileService {
         var fileinfo = await FirebaseCacheManager().getFileFromCache(url);
 if(fileinfo != null)
    {
+    log('testxa${fileinfo.file.path}');
+    log('test');
+
      return super.get(fileinfo.file.path);
    }else{
 
