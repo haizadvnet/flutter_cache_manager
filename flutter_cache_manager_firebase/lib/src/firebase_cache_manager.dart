@@ -15,5 +15,5 @@ class FirebaseCacheManager extends CacheManager with ImageCacheManager {
   }
 
   FirebaseCacheManager._()
-      : super(Config(key,fileSystem: IOFileSystem(key),fileService: FirebaseHttpFileService()));
+      : super(Config(key,stalePeriod: const Duration(days: 30),fileSystem: IOFileSystem(key),fileService: FirebaseHttpFileService()));
 }
