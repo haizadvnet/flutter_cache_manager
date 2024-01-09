@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -10,6 +12,9 @@ class FirebaseHttpFileService extends HttpFileService {
       {Map<String, String>? headers}) async {
     var ref = FirebaseStorage.instance.ref().child(url);
     var _url = await ref.getDownloadURL();
+    log(_url);
+    log('test');
+    log(url);
 
     return super.get(_url);
   }
