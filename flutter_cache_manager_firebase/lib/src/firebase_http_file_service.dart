@@ -12,22 +12,22 @@ class FirebaseHttpFileService extends HttpFileService {
   @override
   Future<FileServiceResponse> get(String url,
       {Map<String, String>? headers}) async {
+    if (headers != null && headers.containsKey("force_download")) {
+      var ref = FirebaseStorage.instance.ref().child(url);
+      var _url = await ref.getDownloadURL();
 
-        var fileinfo = await FirebaseCacheManager().getFileFromCache(url.substring(10));
-if(fileinfo != null)
-   {
+      return super.get(_url);
+    } else {
+      var fileinfo =
+          await FirebaseCacheManager().getFileFromCache(url.substring(10));
+      if (fileinfo != null) {
+        return super.get(fileinfo.file.path);
+      } else {
+        var ref = FirebaseStorage.instance.ref().child(url);
+        var _url = await ref.getDownloadURL();
 
-     return super.get(fileinfo.file.path);
-   }else{
-
-    var ref = FirebaseStorage.instance.ref().child(url);
-    var _url = await ref.getDownloadURL();
-    // var file = await FirebaseCacheManager().putFile(
-    //       imageUrl,
-    //       imageBytes!,
-    //       key: imagePath,);
-
-    return super.get(_url);
-   }
+        return super.get(_url);
+      }
+    }
   }
 }
