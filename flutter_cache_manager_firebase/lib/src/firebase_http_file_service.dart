@@ -18,23 +18,31 @@ class FirebaseHttpFileService extends HttpFileService {
   @override
   Future<FileServiceResponse> get(String url,
       {Map<String, String>? headers}) async {
-    late Reference ref;
-    if (bucket != null) {
-      ref =
-          FirebaseStorage.instanceFor(bucket: "gs://$bucket").ref().child(url);
-    } else {
-      ref = FirebaseStorage.instance.ref().child(url);
-    }
 
-    String downloadUrl;
-    if (retryOptions != null) {
-      downloadUrl = await retryOptions!.retry(
-        () async => await ref.getDownloadURL(),
-        retryIf: (e) => e is FirebaseException,
-      );
+    if (headers != null && headers.containsKey("force_download")) {
+      var ref = FirebaseStorage.instance.ref().child(url);
+      var _url = await ref.getDownloadURL();
+
+      return super.get(_url);
     } else {
-      downloadUrl = await ref.getDownloadURL();
+      late Reference ref;
+      if (bucket != null) {
+        ref =
+            FirebaseStorage.instanceFor(bucket: "gs://$bucket").ref().child(url);
+      } else {
+        ref = FirebaseStorage.instance.ref().child(url);
+      }
+  
+      String downloadUrl;
+      if (retryOptions != null) {
+        downloadUrl = await retryOptions!.retry(
+          () async => await ref.getDownloadURL(),
+          retryIf: (e) => e is FirebaseException,
+        );
+      } else {
+        downloadUrl = await ref.getDownloadURL();
+      }
+      return super.get(downloadUrl);
     }
-    return super.get(downloadUrl);
   }
 }
